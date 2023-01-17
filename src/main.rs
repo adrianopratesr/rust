@@ -5,16 +5,15 @@ fn input() -> String {
 }
 
 fn main() {
-
-    loop {
-        if t() {
+    println!("Seja bem vindo ao gerador de TODO 🚀 ");
+    loop {        
+        if todo_start() {            
             break;
         }
     }
 }
 
-fn t() -> bool {
-    println!("Seja bem vindo ao gerador de TODO 🚀 ");
+fn todo_start() -> bool {
     println!("Deseja adicionar um novo TODO? s/n");
 
     let question = input();
