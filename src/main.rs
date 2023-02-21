@@ -28,11 +28,11 @@ fn main() {
     }
 }
 
-struct Terminal {}
+struct Terminal;
 
 impl Terminal {
     fn new() -> Terminal {
-        Terminal {}
+        Terminal
     }
 
     fn create_todo(&self) {
