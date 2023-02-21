@@ -1,5 +1,3 @@
-use std::io::{Stdin, Stdout, Write};
-
 #[derive(Debug, Clone)]
 struct Todo {
     message: String,
@@ -11,61 +9,55 @@ impl Todo {
     }
 }
 
+fn input() -> String {
+    let mut buf = String::new();
+    std::io::stdin().read_line(&mut buf).unwrap();
+    buf.trim().to_string()
+}
+
 fn main() {
     println!("Seja bem vindo ao gerador de TODO 🚀 ");
+    let start_terminal = Terminal::new();
     loop {
-        let mut start_terminal = Terminal::new();
-        if !start_terminal.ask_to_create_todo() {
-            break;
+        if start_terminal.ask_to_create_todo() {
+            start_terminal.create_todo();
+        } else {
+            println!("Fechando gerador de TODO 😀");
+            std::process::exit(0)
         }
     }
 }
 
-struct Terminal {
-    stdin: Stdin,
-    stdout: Stdout,
-}
+struct Terminal {}
 
 impl Terminal {
     fn new() -> Terminal {
-        Terminal {
-            stdin: std::io::stdin(),
-            stdout: std::io::stdout(),
-        }
+        Terminal {}
     }
 
-    fn ask_to_create_todo(&mut self) -> bool {
-        println!("Você deseja criar um novo TODO? s/n");
-
-        let answer = self.input();
-
-        if answer == "s" {
-            let todo = self.ask_for_new_todo();
-            self.show_todo(&todo);
-            true
-        } else if answer == "n" {
-            println!("Fechando gerador de TODO 😀");
-            false
-        } else {
-            println!("Favor inserir apenas s/n");
-            true
-        }
-    }
-
-    fn ask_for_new_todo(&mut self) -> Todo {
+    fn create_todo(&self) {
         println!("Qual o nome do seu novo TODO?");
-        let name_todo = self.input();
-        Todo::new(name_todo)
+        let name_todo = input();
+        let todo = Todo::new(name_todo);
+        self.show_todo(&todo);
     }
 
-    fn show_todo(&mut self, todo: &Todo) {
+    fn ask_to_create_todo(&self) -> bool {
+        loop {
+            println!("Você deseja criar um novo TODO? s/n");
+            let answer = input();
+            if answer == "s" {
+                return true;
+            } else if answer == "n" {
+                return false;
+            } else {
+                println!("Favor inserir apenas s/n");
+            }
+        }
+    }
+
+    fn show_todo(&self, todo: &Todo) {
         println!("Seu TODO foi criado 😎");
-        writeln!(self.stdout, "Seu TODO é: {}", todo.message).unwrap();
-    }
-
-    fn input(&mut self) -> String {
-        let mut buf = String::new();
-        std::io::stdin().read_line(&mut buf).unwrap();
-        buf.trim().to_string()
+        println!("Seu TODO é: {}", todo.message);
     }
 }
